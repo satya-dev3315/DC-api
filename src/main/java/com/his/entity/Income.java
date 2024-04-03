@@ -1,44 +1,45 @@
 package com.his.entity;
 
+import java.time.LocalDate;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
-@Table(name="HIS_DC_INCOME")
+@Table
 public class Income {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "income_id")
 	private Integer incomeId;
-	private Integer salIncome;
-	private Integer propIncome;	 
+	
+	@Column(name = "salary_income")
+	private Double salaryIncome;
+	
+	@Column(name = "property_income")
+	private Double propertyIncome;
+	
+	@Column(name = "app_number")
 	private Integer appNumber;
 	
-	public Integer getIncomeId() {
-		return incomeId;
-	}
-	public void setIncomeId(Integer incomeId) {
-		this.incomeId = incomeId;
-	}
-	public Integer getSalIncome() {
-		return salIncome;
-	}
-	public void setSalIncome(Integer salIncome) {
-		this.salIncome = salIncome;
-	}
-	public Integer getPropIncome() {
-		return propIncome;
-	}
-	public void setPropIncome(Integer propIncome) {
-		this.propIncome = propIncome;
-	}
-	public Integer getAppNumber() {
-		return appNumber;
-	}
-	public void setAppNumber(Integer appNumber) {
-		this.appNumber = appNumber;
-	}
-
+	@CreationTimestamp
+	@Column(name = "created_date")
+	private LocalDate createdDate;
+	
+	@UpdateTimestamp
+	@Column(name = "updated_date")
+	private LocalDate updatedDate;
+	
 }

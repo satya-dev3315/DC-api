@@ -2,54 +2,46 @@ package com.his.entity;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
-@Table(name="HIS_DC_KID")
+@Table
 public class Kid {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "kid_id")
 	private Integer kidId;
-	private String kidName;	
-	private LocalDate dob;
-	private Long kidSsn;	 
-	private Integer appNumber;
-	public Integer getKidId() {
-		return kidId;
-	}
-	public void setKidId(Integer kidId) {
-		this.kidId = kidId;
-	}
-	public String getKidName() {
-		return kidName;
-	}
-	public void setKidName(String kidName) {
-		this.kidName = kidName;
-	}
-	public LocalDate getDob() {
-		return dob;
-	}
-	public void setDob(LocalDate dob) {
-		this.dob = dob;
-	}
-	public Long getKidSsn() {
-		return kidSsn;
-	}
-	public void setKidSsn(Long kidSsn) {
-		this.kidSsn = kidSsn;
-	}
-	public Integer getAppNumber() {
-		return appNumber;
-	}
-	public void setAppNumber(Integer appNumber) {
-		this.appNumber = appNumber;
-	}
 	
+	@Column(name = "kid_name")
+	private String kidName;
+	
+	private LocalDate dob;
+	
+	private Long ssn;
+	
+	@Column(name = "app_number")
+	private Integer appNumber;   
+	
+	@CreationTimestamp
+	@Column(name = "created_date")
+	private LocalDate createdDate;
+	
+	@UpdateTimestamp
+	@Column(name = "updated_date")
+	private LocalDate updatedDate;
 	
 
 }

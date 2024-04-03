@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.his.dto.EducationDTO;
@@ -19,24 +18,23 @@ import com.his.repository.EducationRepository;
 import com.his.repository.IncomeRepository;
 import com.his.repository.KidRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class DataColServiceImpl implements DataColService {
 	
-	@Autowired
-	EducationRepository eduRepo;
-	@Autowired
-	IncomeRepository incomeRepo;
-	@Autowired
-	KidRepository kidRepo;
+	
+	private final EducationRepository eduRepo;
+	private final IncomeRepository incomeRepo;
+	private final KidRepository kidRepo;
 	
 	@Override
 	public boolean saveEducation(EducationDTO educationDto) {
 		Education education= new Education();
 		BeanUtils.copyProperties(educationDto, education);
 		Education save = eduRepo.save(education);
-		if(save!=null)
-			return true;
-		return false;
+		return save.getEducationId() != null; 
 	}
 	
 	
@@ -45,24 +43,23 @@ public class DataColServiceImpl implements DataColService {
 		Income income= new Income();
 		BeanUtils.copyProperties(incomeDto, income);
 		Income save = incomeRepo.save(income);
-		if(save!=null)
-			return true;
-		return false;
+		return save.getIncomeId() != null;       //replacement for if else conditions.It means if getIncomeId() != null, return true.
+
 	}
 	
 	@Override
 	public boolean saveKids(KidsDTO kidsDto) {
-		List<Kid> kids =new ArrayList<Kid>(); 
-		List<KidDTO> kidDtos= kidsDto.getKids();
+		
+		List<Kid> kids = new ArrayList<>();
+		List<KidDTO> kidDtos = kidsDto.getKids();   // here we will get list of kids frm dto obj
+		
 		kidDtos.forEach(kidDto->{
 			Kid kid=new Kid();
 			BeanUtils.copyProperties(kidDto, kid);
 			kids.add(kid);
 		});
 		List<Kid> saveAll = kidRepo.saveAll(kids);
-		if(saveAll!=null)
-			return true;
-		return false;
+		return saveAll != null;
 	}
 	
 	@Override
@@ -70,32 +67,39 @@ public class DataColServiceImpl implements DataColService {
 		
 		SummaryDTO summary=new SummaryDTO();
 		
-		//get income details and set to Summary
+		//after storing all data , display summary screen with all info
+		//get income details based on app num and set to Summary
+		
 		Income income = incomeRepo.findByAppNumber(appNumber);
 		IncomeDTO incomeDto= new IncomeDTO();
 		BeanUtils.copyProperties(income, incomeDto);
 		summary.setIncomeDto(incomeDto);
 				
-		//get Education details and set to Summary
+		//get Education details based on app num and set to Summary
 		Education education = eduRepo.findByAppNumber(appNumber);
 		EducationDTO educationDto= new EducationDTO();
 		if(education!=null)
 		BeanUtils.copyProperties(education, educationDto);
 		summary.setEduDto(educationDto);
 		
-		//get Kids info and set to Summary
+		//get Kids info based on app num and set to Summary
 		List<Kid> kids=kidRepo.findByAppNumber(appNumber);
-		List<KidDTO> kidDtos=new ArrayList<KidDTO>();
+		List<KidDTO> kidDtos=new ArrayList<>();
+		
 		if(kids!=null) {
 			kids.forEach(kid->{
+				
 				KidDTO kidDto=new KidDTO();
 				BeanUtils.copyProperties(kid, kidDto);
 				kidDtos.add(kidDto);
+				
 			});
 		}
+		
 		KidsDTO kidsDto= new KidsDTO();
 		kidsDto.setAppNumber(appNumber);
 		kidsDto.setKids(kidDtos);
+		
 		summary.setKidsDto(kidsDto);		
 		return summary;
 	}
